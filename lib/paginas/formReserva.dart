@@ -26,8 +26,13 @@ class _FormReservasState extends State<FormReservas> {
   //TABLA HORARIOS
   final TextEditingController _hora_vueloCtl = TextEditingController();
 
-  final CollectionReference _usuarios = FirebaseFirestore.instance.collection('usuarios');
   final CollectionReference _clientes = FirebaseFirestore.instance.collection('clientes');
+  final CollectionReference _reservas = FirebaseFirestore.instance.collection('reservas');
+  final CollectionReference _avion = FirebaseFirestore.instance.collection('avion');
+  final CollectionReference _usuarios = FirebaseFirestore.instance.collection('usuarios');
+  final CollectionReference _vuelos = FirebaseFirestore.instance.collection('vuelos');
+  final CollectionReference _destinos= FirebaseFirestore.instance.collection('destinos');
+  final CollectionReference _horario = FirebaseFirestore.instance.collection('horarios');
 
   //REGISTRAR VUELOS:
   Future<void> _create([DocumentSnapshot? documentSnapshot]) async {
