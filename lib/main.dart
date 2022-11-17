@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:parcial4app/paginas/HomePage.dart';
 import 'package:parcial4app/paginas/formReserva.dart';
 import 'package:parcial4app/principal.dart';
 
@@ -14,11 +15,11 @@ class FirebaseAPP extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Firebase Firestore',
       // home: Principal(),
-      home: FormReservas(),
+      home: HomePage(),
     );
   }
 }
