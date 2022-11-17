@@ -32,6 +32,37 @@ class _PrincipalState extends State<Principal> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                DropdownButtonFormField(
+                          decoration: const InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                borderSide:
+                                    BorderSide(color: Colors.grey, width: 0.0),
+                              ),
+                              border: OutlineInputBorder()),
+                          items: [
+                            const DropdownMenuItem(
+                              child: Text("Masculino"),
+                              value: 1,
+                            ),
+                            const DropdownMenuItem(
+                              child: Text("Femenino"),
+                              value: 2,
+                            )
+                          ],
+                          hint: const Text("Sexo"),
+                          onChanged: (value) {
+                            setState(() {
+                            //  measure = value;
+                              // measureList.add(measure);
+                            });
+                          },
+                          onSaved: (value) {
+                            setState(() {
+                              ///measure = value;
+                            });
+                          }),
                 TextField(
                   controller: _nombreController,
                   decoration: const InputDecoration(labelText: 'Nombre'),
