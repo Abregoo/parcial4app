@@ -18,8 +18,7 @@ class FirebaseAPP extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Firebase Firestore',
-      // home: Principal(),
-      home: HomePage(),
+      home: FormReservas(),
     );
   }
 }
