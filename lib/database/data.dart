@@ -5,30 +5,38 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 //Listados
+listadosCatalogos() {
+  listarAviones();
+  listarDestinos();
+  listarHorarios();
+  listarVuelos();
+}
 
 listados() {
-  listarAviones();
   listarClientes();
   listarDestinos();
   listarHorarios();
   listarReservas();
-  listarVuelos();
 }
 
 listarAviones() async {
   var aviones = await db.collection("avion").get();
-
-  aviones.docs.forEach((element) {
-    print(element.data());
-  });
+  return aviones.docs;
+  // aviones.docs.forEach((element) {
+  //   print(element.data());
+  // });
 }
 
 listarHorarios() async {
   var horarios = await db.collection("horarios").get();
 
+
   horarios.docs.forEach((element) {
+    print("==========");
     print(element.data());
   });
+
+    return horarios.docs;
 }
 
 listarDestinos() async {
@@ -37,6 +45,7 @@ listarDestinos() async {
   destinos.docs.forEach((element) {
     print(element.data());
   });
+  return destinos.docs;
 }
 
 listarVuelos() async {
@@ -45,6 +54,7 @@ listarVuelos() async {
   vuelos.docs.forEach((element) {
     print(element.data());
   });
+  return vuelos.docs;
 }
 
 listarClientes() async {

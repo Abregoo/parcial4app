@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:parcial4app/database/data.dart';
 import 'package:parcial4app/widgets/dateimput.dart';
 import 'package:parcial4app/widgets/dropdown.dart';
 import 'package:parcial4app/widgets/txtinput.dart';
@@ -12,6 +13,15 @@ class FormReservas extends StatefulWidget {
 }
 
 class _FormReservasState extends State<FormReservas> {
+   
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    listadosCatalogos();
+  }
+
+
   // TABLA CLIENTES
   final TextEditingController _nombreCtl = TextEditingController();
     final TextEditingController _cedulaCtl = TextEditingController();
@@ -43,6 +53,8 @@ class _FormReservasState extends State<FormReservas> {
   final CollectionReference _horario =
       FirebaseFirestore.instance.collection('horarios');
 
+ 
+
   space() {
     return SizedBox(
       height: 10,
@@ -65,14 +77,30 @@ class _FormReservasState extends State<FormReservas> {
     return {
       'disponibilidad': 30,
       'tipo_vuelo': _tipo_vueloCtl.text,
-      'avion_codigo': _avion_codigoCtl.text,
-      'destinos_iddestino': _nombre_destinoCtl.text,
+      'avion': jsonAvion(),
+      'destinos': jsonDestino(),
+    };
+  }
+
+  jsonDestino(){
+    return {
+      'nombre_destino': _nombre_destinoCtl.text,
+      'horario:': _hora_vueloCtl.text,
+    };
+
+  }
+
+  jsonAvion(){
+    return {
+      'codigo': _avion_codigoCtl.text,
+      'disponibilidad': 30,
     };
   }
 
   jsonReservas(){
     return {
       'estado': _estadoCtl.text,
+      'vuelos': jsonVuelos(),
     };
   }
 
@@ -187,17 +215,13 @@ class _FormReservasState extends State<FormReservas> {
                     onChanged: (selectedValue) =>
                         _avion_codigoCtl.text = selectedValue.toString(),
                     hintText: "Aerolínea",
-                    lstitems: [
-                      const DropdownMenuItem(
-                        child: Text("Comercial"),
-                        value: 1,
-                        
-                      ),
-                      const DropdownMenuItem(
-                        child: Text("Ejecutivo"),
-                        value: 2,
-                      )
-                    ]),
+                    lstitems: 
+                    listarAviones().map((e){
+                            return DropdownMenuItem(
+                              child: Text(e['marca']), 
+                              value: Text(e['hmarca']),
+                    );}).toList(),                    
+                    ),
 
                 space(),
                 Dropdown(
@@ -205,16 +229,13 @@ class _FormReservasState extends State<FormReservas> {
                     onChanged: (selectedValue) =>
                         _nombre_destinoCtl.text = selectedValue.toString(),
                     hintText: "Destinos",
-                    lstitems: [
-                      const DropdownMenuItem(
-                        child: Text("Estados Unidos"),
-                        value: 1,
-                      ),
-                      const DropdownMenuItem(
-                        child: Text("España"),
-                        value: 2,
-                      )
-                    ]),
+                    lstitems: 
+                    listarDestinos().map((e){
+                            return DropdownMenuItem(
+                              child: Text(e['nombre']), 
+                              value: Text(e['nombre']),
+                    );}).toList(),                    
+                    ),
 
                 space(),
                 Dropdown(
@@ -222,19 +243,14 @@ class _FormReservasState extends State<FormReservas> {
                     onChanged: (selectedValue) =>
                         _hora_vueloCtl.text = selectedValue.toString(),
                     hintText: "Horarios",
-                    lstitems: [
-                      const DropdownMenuItem(
-                        child: Text("12:00"),
-                        value: 1,
-                      ),
-                      const DropdownMenuItem(
-                        child: Text("14:00"),
-                        value: 2,
-                      )
-                    ]),
-
+                    lstitems: 
+                    listarHorarios().map((e){
+                            return DropdownMenuItem(
+                              child: Text(e['hora_vuelo']), 
+                              value: Text(e['hora_vuelo']),
+                    );}).toList(),                    
+                    ),
                 //
-
                 const SizedBox(
                   height: 20,
                 ),
