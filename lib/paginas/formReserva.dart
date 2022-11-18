@@ -13,18 +13,19 @@ class FormReservas extends StatefulWidget {
 }
 
 class _FormReservasState extends State<FormReservas> {
-   
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    listadosCatalogos();
-  }
+    getVuelos();
+    getDestinos();
+    getHorarios();
+    getAviones();
 
+  }
 
   // TABLA CLIENTES
   final TextEditingController _nombreCtl = TextEditingController();
-    final TextEditingController _cedulaCtl = TextEditingController();
+  final TextEditingController _cedulaCtl = TextEditingController();
   final TextEditingController _apellidoCtlr = TextEditingController();
   final TextEditingController _fecha_nacimientoCtl = TextEditingController();
   final TextEditingController _sexoCtlr = TextEditingController();
@@ -44,16 +45,13 @@ class _FormReservasState extends State<FormReservas> {
       FirebaseFirestore.instance.collection('clientes');
   final CollectionReference _reservas =
       FirebaseFirestore.instance.collection('reservas');
-  final CollectionReference _avion =
-      FirebaseFirestore.instance.collection('avion');
   final CollectionReference _vuelos =
       FirebaseFirestore.instance.collection('vuelos');
-  final CollectionReference _destinos =
-      FirebaseFirestore.instance.collection('destinos');
-  final CollectionReference _horario =
-      FirebaseFirestore.instance.collection('horarios');
 
- 
+  // Listas:
+  List lstaviones = [];
+  List lstdestinos = [];
+  List lsthorarios = [];
 
   space() {
     return SizedBox(
@@ -82,29 +80,28 @@ class _FormReservasState extends State<FormReservas> {
     };
   }
 
-  jsonDestino(){
+  jsonDestino() {
     return {
       'nombre_destino': _nombre_destinoCtl.text,
       'horario:': _hora_vueloCtl.text,
     };
-
   }
 
-  jsonAvion(){
+  jsonAvion() {
     return {
       'codigo': _avion_codigoCtl.text,
       'disponibilidad': 30,
     };
   }
 
-  jsonReservas(){
+  jsonReservas() {
     return {
       'estado': _estadoCtl.text,
       'vuelos': jsonVuelos(),
     };
   }
 
-  limpiarFormulario(){
+  limpiarFormulario() {
     _nombreCtl.text = '';
     _apellidoCtlr.text = '';
     _cedulaCtl.text = '';
@@ -162,11 +159,11 @@ class _FormReservasState extends State<FormReservas> {
                     lstitems: [
                       const DropdownMenuItem(
                         child: Text("Masculino"),
-                        value: 1,
+                        value: "Masculino",
                       ),
                       const DropdownMenuItem(
                         child: Text("Femenino"),
-                        value: 2,
+                        value: "Femenino",
                       )
                     ]),
 
@@ -178,16 +175,17 @@ class _FormReservasState extends State<FormReservas> {
                 space(),
                 Dropdown(
                     selectedValue: 0,
-                    onChanged: (selectedValue) => _tipoCtl.text = selectedValue.toString(),
+                    onChanged: (selectedValue) =>
+                        _tipoCtl.text = selectedValue.toString(),
                     hintText: "Tipo",
                     lstitems: [
                       const DropdownMenuItem(
                         child: Text("Natural"),
-                        value: 1,
+                        value: "Natural",
                       ),
                       const DropdownMenuItem(
                         child: Text("Juridico"),
-                        value: 2,
+                        value: "Juridico",
                       )
                     ]),
 
@@ -201,11 +199,11 @@ class _FormReservasState extends State<FormReservas> {
                     lstitems: [
                       const DropdownMenuItem(
                         child: Text("Comercial"),
-                        value: 1,
+                        value: "Comercial",
                       ),
                       const DropdownMenuItem(
                         child: Text("Ejecutivo"),
-                        value: 2,
+                        value: "Ejecutivo",
                       )
                     ]),
 
@@ -215,41 +213,40 @@ class _FormReservasState extends State<FormReservas> {
                     onChanged: (selectedValue) =>
                         _avion_codigoCtl.text = selectedValue.toString(),
                     hintText: "Aerolínea",
-                    lstitems: 
-                    listarAviones().map((e){
-                            return DropdownMenuItem(
-                              child: Text(e['marca']), 
-                              value: Text(e['hmarca']),
-                    );}).toList(),                    
-                    ),
+                    lstitems: lstaviones.map((e) {
+                      return DropdownMenuItem(
+                        child: Text(e['marca']),
+                        value: (e['marca']),
+                      );
+                    }).toList()),
 
                 space(),
                 Dropdown(
-                    selectedValue: 0,
-                    onChanged: (selectedValue) =>
-                        _nombre_destinoCtl.text = selectedValue.toString(),
-                    hintText: "Destinos",
-                    lstitems: 
-                    listarDestinos().map((e){
-                            return DropdownMenuItem(
-                              child: Text(e['nombre']), 
-                              value: Text(e['nombre']),
-                    );}).toList(),                    
-                    ),
+                  selectedValue: 0,
+                  onChanged: (selectedValue) =>
+                      _nombre_destinoCtl.text = selectedValue.toString(),
+                  hintText: "Destinos",
+                  lstitems: lstdestinos.map((e) {
+                    return DropdownMenuItem(
+                      child: Text(e['nombre']),
+                      value: (e['nombre']),
+                    );
+                  }).toList(),
+                ),
 
                 space(),
                 Dropdown(
-                    selectedValue: 0,
-                    onChanged: (selectedValue) =>
-                        _hora_vueloCtl.text = selectedValue.toString(),
-                    hintText: "Horarios",
-                    lstitems: 
-                    listarHorarios().map((e){
-                            return DropdownMenuItem(
-                              child: Text(e['hora_vuelo']), 
-                              value: Text(e['hora_vuelo']),
-                    );}).toList(),                    
-                    ),
+                  selectedValue: 0,
+                  onChanged: (selectedValue) =>
+                      _hora_vueloCtl.text = selectedValue.toString(),
+                  hintText: "Horarios",
+                  lstitems: lsthorarios.map((e) {
+                    return DropdownMenuItem(
+                      child: Text(e['hora_vuelo']),
+                      value: (e['hora_vuelo']),
+                    );
+                  }).toList(),
+                ),
                 //
                 const SizedBox(
                   height: 20,
@@ -274,7 +271,57 @@ class _FormReservasState extends State<FormReservas> {
             ),
           );
         });
+
+    
   }
+
+  void getHorarios() async {
+      CollectionReference collection =
+          FirebaseFirestore.instance.collection("horarios");
+      QuerySnapshot lsthorariosbd = await collection.get();
+
+      if (lsthorariosbd.docs.length > 0) {
+        lsthorariosbd.docs.forEach((element) {
+          lsthorarios.add(element.data());
+        });
+      }
+    }
+
+    void getVuelos() async {
+      CollectionReference collection =
+          FirebaseFirestore.instance.collection("vuelos");
+      QuerySnapshot lstvuelosbd = await collection.get();
+
+      if (lstvuelosbd.docs.length > 0) {
+        lstvuelosbd.docs.forEach((element) {
+          // .add(element.data());
+        });
+      }
+    }
+
+    void getAviones() async {
+      CollectionReference collection =
+          FirebaseFirestore.instance.collection("avion");
+      QuerySnapshot lstavionesbd = await collection.get();
+
+      if (lstavionesbd.docs.length > 0) {
+        lstavionesbd.docs.forEach((element) {
+          lstaviones.add(element.data());
+        });
+      }
+    }
+
+    void getDestinos() async {
+      CollectionReference collection =
+          FirebaseFirestore.instance.collection("detinos");
+      QuerySnapshot lstdestinosbd = await collection.get();
+
+      if (lstdestinosbd.docs.length > 0) {
+        lstdestinosbd.docs.forEach((element) {
+          lstdestinos.add(element.data());
+        });
+      }
+    }
 
   @override
   Widget build(BuildContext context) {

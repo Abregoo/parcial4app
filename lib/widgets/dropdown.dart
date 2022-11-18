@@ -15,7 +15,7 @@ class Dropdown extends StatefulWidget {
   final String? labelText;
   final String hintText;
   final dynamic selectedValue;
-  List<DropdownMenuItem<int>> lstitems;
+  List<DropdownMenuItem> lstitems;
   @override
   State<Dropdown> createState() => _DropdownState();
 }

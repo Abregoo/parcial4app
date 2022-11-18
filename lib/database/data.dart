@@ -19,12 +19,14 @@ listados() {
   listarReservas();
 }
 
-listarAviones() async {
+  listarAviones() async {
   var aviones = await db.collection("avion").get();
-  return aviones.docs;
-  // aviones.docs.forEach((element) {
-  //   print(element.data());
-  // });
+  List lstaviones = [];
+  aviones.docs.forEach((element) {
+    lstaviones.add(element.data());
+  });
+
+  return lstaviones;
 }
 
 listarHorarios() async {
@@ -49,7 +51,7 @@ listarDestinos() async {
 }
 
 listarVuelos() async {
-  var vuelos = await db.collection("vuelos").get();
+  var vuelos = await db.collection("").get();
 
   vuelos.docs.forEach((element) {
     print(element.data());
